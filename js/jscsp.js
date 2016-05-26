@@ -50,8 +50,8 @@ function blendDownOne(upperColor, lowerColor) {
             currentPickerColor = $('#colorInput-' + i).spectrum("get").toRgbString();
             $('#colorPreview-' + i).css('background', currentPickerColor);
         }
-        $("#overlayPreview-w").css("background", "rgba(255,255,255," + $('#white-opacity').val() + ")");
-        $("#overlayPreview-b").css("background", "rgba(0,0,0," + $('#black-opacity').val() + ")");
+        $("#overlayPreview-w").css("background", "rgba(255,255,255," + parseFloat($('#white-opacity').val()) + ")");
+        $("#overlayPreview-b").css("background", "rgba(0,0,0," + parseFloat($('#black-opacity').val()) + ")");
         var mainColors = [],
             whiteColor = realityCheck($("#overlayPreview-w").css("backgroundColor").slice(5, -1)),
             blackColor = realityCheck($("#overlayPreview-b").css("backgroundColor").slice(5, -1)),
