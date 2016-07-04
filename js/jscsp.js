@@ -3,9 +3,11 @@
 // takes #,#,# and converts to RRGGBB
 function backToHex(color) {
     var exploded = color.split(',');
-    var hexColor = '';
+    var hexColor = '', singleColor = '';
     for (var i = 0; i < 3; i++) {
-        hexColor += parseInt(exploded[i], 10).toString(16);
+        singleColor = parseInt(exploded[i], 10).toString(16);
+        hexColor += (singleColor.length === 1) ? '0' : '';
+        hexColor += singleColor;
     }
     return hexColor;
 }
@@ -66,7 +68,26 @@ function blendDownOne(upperColor, lowerColor) {
             $('#r3c' + i).text("#" + backToHex(blendDownOne(overlayColor, blendDownOne(blackColor, mainColors[i]))));
         }
     }
-
+    
+    function palettePreview() {
+        var count = 1;
+        $('.small-colorbox').css("background-color", "transparent");
+        for (var i = 1; i < 4; i++) {
+            for (var j = 1; j < 6; j++) {
+                var r = i.toString(), c = j.toString();
+                if( $("#colorBox-"+r+c).hasClass('selectedBox') ) {
+                    if (count <= 5) {
+                        $("#r"+r+"c"+c).css("background-color", $("#r"+r+"c"+c).text());
+                        $('.color-'+count.toString()+'-preview').css("background-color", $("#r"+r+"c"+c).text());
+                        count++;
+                    }
+                } else {
+                    $("#r"+r+"c"+c).css("background-color", "transparent");
+                }
+            }
+        }
+    }
+    
     var container = document.getElementById('csp-container'),
         path,
         xhr = new XMLHttpRequest();
@@ -116,11 +137,15 @@ function blendDownOne(upperColor, lowerColor) {
         }
         computeAndPreview();
 
-        for (var i = 1; i <= 6; i++) {
+        for (i = 1; i <= 6; i++) {
             $('#colorInput-' + i).on('change.spectrum', computeAndPreview);
         }
         $('#white-opacity').blur(computeAndPreview);
         $('#black-opacity').blur(computeAndPreview);
+        $('.color-box').click(function(){
+            $(this).toggleClass('selectedBox');
+            palettePreview();
+        });
     };
     xhr.send();
 })(jQuery);
