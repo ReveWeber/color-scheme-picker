@@ -44,31 +44,6 @@ function blendDownOne(upperColor, lowerColor) {
 (function ($) {
     // reaction functions
 
-    function computeAndPreview() {
-        // fills colors into preview panel
-        // computes blended color values and fills them in to table below
-        var currentPickerColor;
-        for (var i = 1; i <= 6; i++) {
-            currentPickerColor = $('#colorInput-' + i).spectrum("get").toRgbString();
-            $('#colorPreview-' + i).css('background', currentPickerColor);
-        }
-        $("#overlayPreview-w").css("background", "rgba(255,255,255," + parseFloat($('#white-opacity').val()) + ")");
-        $("#overlayPreview-b").css("background", "rgba(0,0,0," + parseFloat($('#black-opacity').val()) + ")");
-        var mainColors = [],
-            whiteColor = realityCheck($("#overlayPreview-w").css("backgroundColor").slice(5, -1)),
-            blackColor = realityCheck($("#overlayPreview-b").css("backgroundColor").slice(5, -1)),
-            overlayColor = $("#colorPreview-6").css("backgroundColor").slice(5, -1);
-        for (i = 1; i < 6; i++) {
-            mainColors[i] = $('#colorPreview-' + i).css('backgroundColor').slice(4, -1);
-        }
-        // row 1 output
-        for (i = 1; i < 6; i++) {
-            $('#r1c' + i).text("#" + backToHex(blendDownOne(overlayColor, blendDownOne(whiteColor, mainColors[i]))));
-            $('#r2c' + i).text("#" + backToHex(blendDownOne(overlayColor, mainColors[i])));
-            $('#r3c' + i).text("#" + backToHex(blendDownOne(overlayColor, blendDownOne(blackColor, mainColors[i]))));
-        }
-    }
-    
     function palettePreview() {
         var count = 1;
         $('.small-colorbox').css("background-color", "transparent");
@@ -86,6 +61,32 @@ function blendDownOne(upperColor, lowerColor) {
                 }
             }
         }
+    }
+    
+    function computeAndPreview() {
+        // fills colors into preview panel
+        // computes blended color values and fills them in to table below
+        // cascades into computed colors and bottommost preview 
+        var currentPickerColor;
+        for (var i = 1; i <= 6; i++) {
+            currentPickerColor = $('#colorInput-' + i).spectrum("get").toRgbString();
+            $('#colorPreview-' + i).css('background', currentPickerColor);
+        }
+        $("#overlayPreview-w").css("background", "rgba(255,255,255," + parseFloat($('#white-opacity').val()) + ")");
+        $("#overlayPreview-b").css("background", "rgba(0,0,0," + parseFloat($('#black-opacity').val()) + ")");
+        var mainColors = [],
+            whiteColor = realityCheck($("#overlayPreview-w").css("backgroundColor").slice(5, -1)),
+            blackColor = realityCheck($("#overlayPreview-b").css("backgroundColor").slice(5, -1)),
+            overlayColor = $("#colorPreview-6").css("backgroundColor").slice(5, -1);
+        for (i = 1; i < 6; i++) {
+            mainColors[i] = $('#colorPreview-' + i).css('backgroundColor').slice(4, -1);
+        }
+        for (i = 1; i < 6; i++) {
+            $('#r1c' + i).text("#" + backToHex(blendDownOne(overlayColor, blendDownOne(whiteColor, mainColors[i]))));
+            $('#r2c' + i).text("#" + backToHex(blendDownOne(overlayColor, mainColors[i])));
+            $('#r3c' + i).text("#" + backToHex(blendDownOne(overlayColor, blendDownOne(blackColor, mainColors[i]))));
+        }
+        palettePreview();
     }
     
     var container = document.getElementById('csp-container'),
